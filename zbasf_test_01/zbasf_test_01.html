@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=GB2312" />
+<title>ZBASF_TEST_01</title>
+<style type="text/css">
+.code{ font-family:"Courier New", Courier, monospace; color:#000; font-size:14px; background-color:#F2F4F7 }
+  .codeComment {font-family:"Courier New", Courier, monospace; color:#0000F0; font-size:14px; background-color:#F2F4F7 }
+  .normalBold{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:12px; font-weight:800 }
+  .normalBoldLarge{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:16px; font-weight:800 }
+</style>
+<style type="text/css">
+  .normal{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:12px }
+  .footer{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:12px; text-align: center }
+  h2{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:16px; font-weight:800 }
+  h3{ font-family:Arial, Helvetica, sans-serif; color:#000; font-size:14px; font-weight:800 }
+  .outerTable{
+   background-color:#E0E7ED;
+   width:100%;
+   border-top-width: thin;
+   border-right-width: thin;
+   border-right-width: thin;
+   border-left-width: thin;
+   border-top-style: solid;
+   border-right-style: solid;
+   border-bottom-style: solid;
+   border-left-style: solid;
+  }
+  .innerTable{
+   background-color:#F2F4F7;
+   width:100%;
+   border-top-width: thin;
+   border-right-width: thin;
+   border-bottom-width: thin;
+   border-left-width: thin;
+   border-top-style: solid;
+   border-right-style: solid;
+   border-bottom-style: solid;
+   border-left-style: solid;
+  }
+</style>
+</head>
+<body>
+<table class="outerTable">
+  <tr class="normalBoldLarge">
+     <td><h2>Code listing for: ZBASF_TEST_01</h2>
+<h3> Description: </h3></td>
+   </tr>
+  <tr>
+     <td>
+     <table class="innerTable">
+       <tr>
+          <td>
+   <div class="codeComment">
+*&---------------------------------------------------------------------*<br />
+*&&nbsp;Report&nbsp;ZBASF_TEST_01<br />
+*&---------------------------------------------------------------------*<br />
+*&<br />
+*&---------------------------------------------------------------------*<br />
+   </div>
+   <div class="code">
+REPORT ZBASF_TEST_01.<br />
+<br />
+DATA(sentence) = `ABАP  is excellent `.<br />
+<br />
+cl_demo_output=&gt;write(  |Number of words: { count( val = sentence regex = `[\\S|А|A-Z|a-z|\\']+` ) }| ).<br />
+<br />
+DO count( val = sentence regex = `[\\S|А|A-Z|a-z|\\']+` ) TIMES.<br />
+<br />
+&nbsp;&nbsp;DATA(lv_str)&nbsp;=&nbsp;match(&nbsp;val&nbsp;=&nbsp;sentence&nbsp;regex&nbsp;=&nbsp;`[\\S|А|A-Z|a-z|\\']+`&nbsp;occ&nbsp;=&nbsp;sy-index&nbsp;).<br />
+<br />
+&nbsp;&nbsp;DATA(lv_unique_str)&nbsp;=&nbsp;REDUCE&nbsp;string(&nbsp;INIT&nbsp;s&nbsp;=&nbsp;lv_str<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FOR&nbsp;i&nbsp;=&nbsp;0&nbsp;UNTIL&nbsp;i&nbsp;&gt;=&nbsp;strlen(&nbsp;lv_str&nbsp;)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LET&nbsp;x&nbsp;=&nbsp;lv_str+i(1)&nbsp;IN<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT&nbsp;s&nbsp;=&nbsp;condense(&nbsp;val&nbsp;=&nbsp;replace(&nbsp;val&nbsp;=&nbsp;s&nbsp;sub&nbsp;=&nbsp;x&nbsp;with&nbsp;=&nbsp;space&nbsp;occ&nbsp;=&nbsp;2&nbsp;)&nbsp;del&nbsp;=&nbsp;space&nbsp;)&nbsp;).<br />
+<br />
+&nbsp;&nbsp;cl_demo_output=&gt;write(&nbsp;|Number&nbsp;of&nbsp;unique&nbsp;characters&nbsp;in&nbsp;the&nbsp;word:&nbsp;{&nbsp;match(&nbsp;val&nbsp;=&nbsp;sentence&nbsp;regex&nbsp;=&nbsp;`[\\S|А|A-Z|a-z|\\']+`&nbsp;occ&nbsp;=&nbsp;sy-index&nbsp;)&nbsp;}|&nbsp;&&&nbsp;|&nbsp;-&nbsp;|&nbsp;&&&nbsp;|{&nbsp;strlen(&nbsp;lv_unique_str&nbsp;)&nbsp;}|&nbsp;).<br />
+<br />
+ENDDO.<br />
+<br />
+cl_demo_output=&gt;display( ).<br />
+<br />
+   </div>
+   <div class="codeComment">
+*why&nbsp;ABАP&nbsp;correctly&nbsp;has&nbsp;4&nbsp;unique&nbsp;letters.<br />
+*A&nbsp;is&nbsp;HalfWidthAlphanumeric,&nbsp;А&nbsp;is&nbsp;FullWidthAlphanumeric,&nbsp;so&nbsp;are&nbsp;two&nbsp;different&nbsp;letters.<br />
+            </div>
+          </td>
+        </tr>
+      </table>
+      </td>
+      </tr>
+   <tr>
+<td class="footer">Extracted by Mass Download version 1.5.5 - E.G.Mellodew. 1998-2021. Sap Release 753 [ Updated to v1.5.5.4 by lijq21@qq.com]</td>
+   </tr>
+</table>
+</body>
+</html>
